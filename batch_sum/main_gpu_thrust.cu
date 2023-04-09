@@ -16,7 +16,7 @@ void print_thrust_version() {
               << std::endl;
 }
 
-Number thrust_randengine(void) {
+Number rand_engine(void) {
     static thrust::default_random_engine rng;
     static thrust::uniform_int_distribution<Number> dist(0, 9999);
     return dist(rng);
@@ -29,7 +29,7 @@ int main(void) {
     std::cout << "Generating " << num_samples << " random numbers ...\n"
               << std::endl;
     thrust::host_vector<Number> h_vec(num_samples);
-    thrust::generate(h_vec.begin(), h_vec.end(), thrust_randengine);
+    thrust::generate(h_vec.begin(), h_vec.end(), rand_engine);
 
     // transfer to device and compute sum
     std::cout << "Transfer the data from host to the device (gpu)\n"
