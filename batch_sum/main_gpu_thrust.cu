@@ -10,33 +10,29 @@
 #include "config.hpp"
 #include "timer.hpp"
 
-void print_thrust_version() {
+void headline() {
     std::cout << "#####\nUsing GPU\nThrust version: " << THRUST_MAJOR_VERSION
               << "." << THRUST_MINOR_VERSION << "\n######\n"
               << std::endl;
 }
 
-Number rand_engine(void) {
-    static thrust::default_random_engine rng;
-    static thrust::uniform_int_distribution<Number> dist(0, 9999);
-    return dist(rng);
-}
-
 int main(void) {
-    print_thrust_version();
+    headline();
 
-    // generate random data on the host
+    // 1. generate random data on the host
     std::cout << "Generating " << num_samples << " random numbers ...\n"
               << std::endl;
+    static thrust::default_random_engine rng;
+    static thrust::uniform_int_distribution<Number> dist(0, 9999);
     thrust::host_vector<Number> h_vec(num_samples);
-    thrust::generate(h_vec.begin(), h_vec.end(), rand_engine);
+    thrust::generate(h_vec.begin(), h_vec.end(), [&]() { return dist(rng); });
 
-    // transfer to device and compute sum
+    // 2. transfer the data to the device
     std::cout << "Transfer the data from host to the device (gpu)\n"
               << std::endl;
     thrust::device_vector<Number> d_vec = h_vec;
 
-    // compute sum on the device (gpu)
+    // 3. compute sum on the device (gpu)
     auto do_sum = [&]() {
         // binary operation used to reduce values
         thrust::plus<Number> binary_op;
@@ -46,12 +42,11 @@ int main(void) {
         return sum;
     };
 
-    Number sum = 0;
-    double t_main = tictoc(do_sum, sum);
-    print_time(t_main, "t_main");
+    Number output = 0;
+    double t_main = tictoc(do_sum, output);
 
-    // print the sum and execution time
-    std::cout << "sum is " << sum << std::endl;
+    print_time(t_main, "t_main");
+    std::cout << "sum is " << output << std::endl;
 
     return 0;
 }
