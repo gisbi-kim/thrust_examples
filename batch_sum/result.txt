@@ -1,0 +1,24 @@
+CPU
+    root@02394ab4c8a4:/examples/build# ./main_cpu 
+    #####
+    Using CPU
+    ######
+
+    Generating 500000000 random numbers ...
+
+    t_main - Execution time: 213.133 milli seconds
+    sum is 2499712079576
+
+GPU
+    root@02394ab4c8a4:/examples/build# ./main_gpu 
+    #####
+    Using GPU
+    Thrust version: 1.12
+    ######
+
+    Generating 500000000 random numbers ...
+
+    Transfer the data from host to the device (gpu)
+
+    t_main - Execution time: 11.08 milli seconds
+    sum is 2499660003038
