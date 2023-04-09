@@ -1,3 +1,5 @@
+# use like: $ ./docker_run.sh $(pwd)
+
 echo $1
 
 xhost +local:root
