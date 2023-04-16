@@ -1,10 +1,39 @@
-CPU
-    Generating 1000000 random points ...
-    t_main - Execution time: 2.309 milli seconds
-    The averaged_point is 1495.54431, 629.012265, -1671.75798
 
-GPU
-    Generating 1000000 random points ...
-    Transfer the data from host to the device (gpu)
-    t_main - Execution time: 0.308 milli seconds
-    The averaged_point is 735.287879, 28.7293813, -3255.06016
+num points: 100000
+    CPU
+        Generating 100000 random points ...
+        t_main - Execution time: 0.258 milli seconds
+        The averaged_point is -436.438697, 389.398824, -267.771134
+
+    GPU
+        Generating 100000 random points ...
+        Transfer the data from host to the device (gpu)
+        t_main - Execution time: 0.17 milli seconds
+        The averaged_point is -1139.95463, 1259.41584, 294.89396
+
+num points: 1000000
+    CPU
+        Generating 1000000 random points ...
+        t_main - Execution time: 2.309 milli seconds
+        The averaged_point is 1495.54431, 629.012265, -1671.75798
+
+    GPU
+        Generating 1000000 random points ...
+        Transfer the data from host to the device (gpu)
+        t_main - Execution time: 0.308 milli seconds
+        The averaged_point is 735.287879, 28.7293813, -3255.06016
+   
+   
+num points: 10000000
+    CPU
+        Generating 10000000 random points ...
+        t_main - Execution time: 23.243 milli seconds
+        The averaged_point is -4654.91612, 6921.59851, -1793.83629
+
+    GPU
+        Generating 10000000 random points ...
+        Transfer the data from host to the device (gpu)
+        t_main - Execution time: 1.109 milli seconds
+        The averaged_point is 3543.63326, -6169.05426, 516.747183
+
+
