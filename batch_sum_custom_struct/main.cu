@@ -12,14 +12,16 @@
 #include "config.hpp"
 #include "timer.hpp"
 
-void headline() {
+void headline()
+{
     std::cout << "#####\nUsing GPU\nThrust version: " << THRUST_MAJOR_VERSION
               << "." << THRUST_MINOR_VERSION << "\n######\n"
               << std::endl;
 }
 
-class Point {
-   public:
+class Point
+{
+public:
     double x;
     double y;
     double z;
@@ -32,24 +34,30 @@ class Point {
         : x(x), y(y), z(z) {}
 
     // Addition operator
-    __host__ __device__ Point operator+(const Point &other) const {
+    __host__ __device__ Point operator+(const Point &other) const
+    {
         return Point(this->x + other.x, this->y + other.y, this->z + other.z);
     }
 };
 
-struct PointAddition : public thrust::binary_function<Point, Point, Point> {
-    __host__ __device__ Point operator()(const Point &a, const Point &b) const {
+struct PointAddition : public thrust::binary_function<Point, Point, Point>
+{
+    __host__ __device__ Point operator()(const Point &a, const Point &b) const
+    {
         return a + b;
     }
 };
 
-class RandomPointGenerator {
-   public:
+class RandomPointGenerator
+{
+public:
     RandomPointGenerator(double mu, double std) : mu(mu), std(std) {}
 
-    __host__ Point operator()() const {
+    __host__ Point operator()() const
+    {
         std::vector<double> xyz{};
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i)
+        {
             unsigned int seed = std::random_device{}();
             thrust::default_random_engine rng(seed);
             thrust::normal_distribution<double> dist(mu, std);
@@ -60,19 +68,25 @@ class RandomPointGenerator {
         double y = xyz.at(1);
         double z = xyz.at(2);
 
-        std::cout << " Generate a point - ";
-        std::cout << "x: " << x << ", ";
-        std::cout << "y: " << y << ", ";
-        std::cout << "z: " << z << std::endl;
+        if (verbose)
+        {
+            std::cout << " Generate a point - ";
+            std::cout << "x: " << x << ", ";
+            std::cout << "y: " << y << ", ";
+            std::cout << "z: " << z << std::endl;
+        }
+
         return Point(x, y, z);
     }
 
-   private:
+private:
     double mu;
     double std;
+    const bool verbose = false;
 };
 
-int main(void) {
+int main(void)
+{
     headline();
 
     // 1. generate random data on the host
@@ -89,7 +103,8 @@ int main(void) {
     thrust::device_vector<Point> d_vec = h_vec;
 
     // 3. compute sum on the device (gpu)
-    auto do_sum = [&]() {
+    auto do_sum = [&]()
+    {
         PointAddition add_op;
         Point origin{};
         Point averaged_point =
