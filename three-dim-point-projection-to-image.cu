@@ -98,10 +98,12 @@ int main() {
     thrust::device_vector<float3> d_points(N);
 
     cudaEventRecord(start);
-    thrust::transform(thrust::counting_iterator<unsigned int>(0),
-                      thrust::counting_iterator<unsigned int>(N),
-                      d_points.begin(),
-                      RandomPointGenerator(time(nullptr)));
+    {
+        thrust::transform(thrust::counting_iterator<unsigned int>(0),
+                          thrust::counting_iterator<unsigned int>(N),
+                          d_points.begin(),
+                          RandomPointGenerator(time(nullptr)));
+    }
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&elapsedTime, start, stop);
@@ -112,7 +114,9 @@ int main() {
     thrust::device_vector<float2> d_image_coords(N);
 
     cudaEventRecord(start);
-    thrust::transform(d_points.begin(), d_points.end(), d_image_coords.begin(), ToSpherical(width, height));
+    {
+        thrust::transform(d_points.begin(), d_points.end(), d_image_coords.begin(), ToSpherical(width, height));
+    }
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&elapsedTime, start, stop);
@@ -124,10 +128,11 @@ int main() {
     // 결과를 호스트로 복사
     std::vector<float3> h_points(N);
     std::vector<float2> h_image_coords(N);
-
     cudaEventRecord(start);
-    thrust::copy(d_points.begin(), d_points.end(), h_points.begin());
-    thrust::copy(d_image_coords.begin(), d_image_coords.end(), h_image_coords.begin());
+    {
+        thrust::copy(d_points.begin(), d_points.end(), h_points.begin());
+        thrust::copy(d_image_coords.begin(), d_image_coords.end(), h_image_coords.begin());
+    }
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&elapsedTime, start, stop);
@@ -157,35 +162,30 @@ Execution build compiler returned: 0
 Program returned: 0
 
 Using GPU: Tesla T4
+
 CUDA Runtime Version: 12.2
 CUDA Driver Version: 12.2
 
-ASM generation compiler returned: 0
-Execution build compiler returned: 0
-Program returned: 0
 Memory usage at before allocation: used = 105.000000, free = 14825.562500 MB, total = 14930.562500 MB
-Point generation time: 1.88826 ms
-Spherical transformation time: 1.83283 ms
+
+Point generation time: 1.80637 ms
+Spherical transformation time: 1.7665 ms
+
 Memory usage at after allocation: used = 205.000000, free = 14725.562500 MB, total = 14930.562500 MB
-Copying to host time: 473.374 ms
-Point 0: (1.54322, -7.14025, -6.97402) -> Image Coords: (181.681, 356.458)
-Point 1: (-7.14025, -6.97402, -3.01801) -> Image Coords: (78.8004, 284.864)
-Point 2: (-6.97402, -3.01801, -2.43688) -> Image Coords: (41.601, 287.414)
-Point 3: (-3.01801, -2.43688, 9.51612) -> Image Coords: (69.1892, 59.1389)
-Point 4: (-2.43688, 9.51612, -7.5907) -> Image Coords: (505.535, 340.519)
-Point 5: (9.51612, -7.5907, 9.08719) -> Image Coords: (251.416, 142.021)
-Point 6: (-7.5907, 9.08719, 7.63673) -> Image Coords: (550.885, 152.478)
-Point 7: (9.08719, 7.63673, -7.61795) -> Image Coords: (391.188, 327.178)
-Point 8: (7.63673, -7.61795, -5.92422) -> Image Coords: (240.125, 316.737)
-Point 9: (-7.61795, -5.92422, -7.91345) -> Image Coords: (67.3262, 344.939)
-Point 10: (-5.92422, -7.91345, 9.83294) -> Image Coords: (94.5431, 120.406)
-Point 11: (-7.91345, 9.83294, 5.82871) -> Image Coords: (549.025, 173.9)
-Point 12: (9.83294, 5.82871, -2.1359) -> Image Coords: (374.504, 268.224)
-Point 13: (5.82871, -2.1359, -1.89917) -> Image Coords: (284.222, 285.362)
-Point 14: (-2.1359, -1.89917, 5.371) -> Image Coords: (74.0309, 74.7179)
-Point 15: (-1.89917, 5.371, 3.77571) -> Image Coords: (514.619, 150.573)
-Point 16: (5.371, 3.77571, -2.52031) -> Image Coords: (382.412, 296.002)
-Point 17: (3.77571, -2.52031, 2.00765) -> Image Coords: (260.047, 176.38)
+
+Copying to host time: 21.1244 ms
+
+Point 0: (-3.90097, -3.52748, 4.91908) -> Image Coords: (74.8831, 125.106)
+Point 1: (-3.52748, 4.91908, 8.78057) -> Image Coords: (543.368, 92.2174)
+Point 2: (4.91908, 8.78057, 6.95749) -> Image Coords: (427.985, 147.585)
+Point 3: (8.78057, 6.95749, 5.02476) -> Image Coords: (388.253, 175.58)
+Point 4: (6.95749, 5.02476, -9.84601) -> Image Coords: (383.71, 370.462)
+Point 5: (5.02476, -9.84601, 3.39904) -> Image Coords: (208.065, 194.421)
+Point 6: (-9.84601, 3.39904, -4.84678) -> Image Coords: (606.141, 306.542)
+Point 7: (3.39904, -4.84678, 1.30517) -> Image Coords: (222.297, 206.845)
+Point 8: (-4.84678, 1.30517, 1.62951) -> Image Coords: (613.206, 192.039)
+Point 9: (1.30517, 1.62951, -1.81147) -> Image Coords: (411.212, 349.192)
+
 
 */
 
